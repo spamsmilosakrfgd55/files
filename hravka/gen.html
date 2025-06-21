@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Generátor her</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f3f3;
+      padding: 20px;
+    }
+    input, textarea, button {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+      font-size: 16px;
+    }
+    .output {
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-top: 20px;
+      position: relative;
+    }
+    .copy-btn {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      padding: 4px 10px;
+      background: orange;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+    }
+    label {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    pre {
+      margin-top: 20px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Generátor záznamu o hře</h2>
+
+<label for="gameId">ID</label>
+<input type="text" id="gameId" placeholder="např. my-cool-game">
+
+<label for="gameName">Game Name</label>
+<input type="text" id="gameName" placeholder="např. My Cool Game">
+
+<label for="gameIcon">Icon URL</label>
+<input type="text" id="gameIcon" placeholder="https://example.com/icon.png">
+
+<label for="gameFrame">Frame (iframe URL)</label>
+<input type="text" id="gameFrame" placeholder="https://example.com/frame.html">
+
+<label for="gameDesc">Description</label>
+<textarea id="gameDesc" rows="3" placeholder="Popis hry..."></textarea>
+
+<button onclick="generateCode()">Submit</button>
+
+<div class="output" id="indexOutput">
+  <button class="copy-btn" onclick="copyToClipboard('indexCode')">Copy</button>
+  <pre id="indexCode"></pre>
+</div>
+
+<div class="output" id="dataOutput">
+  <button class="copy-btn" onclick="copyToClipboard('dataCode')">Copy</button>
+  <pre id="dataCode"></pre>
+</div>
+
+<script>
+  function generateCode() {
+    const id = document.getElementById('gameId').value.trim();
+    const name = document.getElementById('gameName').value.trim();
+    const icon = document.getElementById('gameIcon').value.trim();
+    const frame = document.getElementById('gameFrame').value.trim();
+    const desc = document.getElementById('gameDesc').value.trim();
+
+    const indexHTML = `
+<a href="game.html?id=${id}" class="game-button">
+    <img src="${icon}" alt="icon">
+    <span>${name}</span>
+</a>`.trim();
+
+    const dataJS = `
+{
+    id: "${id}",
+    name: "${name}",
+    icon: "${icon}",
+    description: "${desc}",
+    url: "${frame}"
+},`.trim();
+
+    document.getElementById('indexCode').textContent = indexHTML;
+    document.getElementById('dataCode').textContent = dataJS;
+  }
+
+  function copyToClipboard(id) {
+    const text = document.getElementById(id).textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Zkopírováno!");
+    });
+  }
+</script>
+
+</body>
+</html>
