@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -80,7 +80,7 @@
 
     <div id="inventory">
         <span id="close-inventory" onclick="toggleInventory()">✖</span>
-        <strong>Inventář:</strong>
+        <strong>Inventory:</strong>
         <div id="inventory-items"></div>
     </div>
 
@@ -152,8 +152,8 @@
                     clearInterval(intervalId);
                     const selectedItem = selectItem();
                     animation.innerHTML = selectedItem.emoji;
-                    result.innerHTML = `Získal jsi: ${selectedItem.emoji}`;
-                    chanceDisplay.innerHTML = `Šance: ${selectedItem.chance}%`;
+                    result.innerHTML = `You got: ${selectedItem.emoji}`;
+                    chanceDisplay.innerHTML = `Chance: ${selectedItem.chance}%`;
                     addToInventory(selectedItem);
                     saveInventory();
                 }
@@ -195,10 +195,10 @@
         }
 
         function clearProgress() {
-            if (confirm("Oprvdu chcete vymazat svůj progress?")) {
+            if (confirm("Do you want to clear your progress?")) {
                 inventory = [];
                 saveInventory();
-                alert("Progress byl úspěšně vymazán!");
+                alert("Progress has been successfully deleted!");
             }
         }
 
