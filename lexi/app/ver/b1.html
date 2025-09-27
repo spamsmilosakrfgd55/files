@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - LexiAI</title>
+    
+    <style>
+        /* --- CSS STYLES (Dark Theme with Brighter Mint) --- */
+        :root {
+            /* Dark Gray (Base Background) */
+            --color-bg-dark: #202123;
+            /* Medium Gray (AI Message Background) */
+            --color-bg-medium: #40414f;
+            /* Brighter Mint Green (Accent/User Messages) */
+            --color-mint-accent: #20E3AF; /* Brighter, more vibrant green */
+            /* Light Gray (Text Color) */
+            --color-text-light: #D9D9E3;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--color-bg-dark);
+            color: var(--color-text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .chatbot-container {
+            width: 100%;
+            max-width: 800px;
+            height: 100%;
+            background-color: var(--color-bg-dark);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid var(--color-bg-medium);
+        }
+
+        .chat-header h1 {
+            font-size: 1.5em;
+            color: var(--color-mint-accent);
+            margin: 0;
+        }
+
+        .chat-window {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            scrollbar-color: var(--color-bg-medium) var(--color-bg-dark);
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .message p {
+            padding: 12px 18px;
+            border-radius: 15px;
+            max-width: 70%;
+            word-wrap: break-word;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* User Messages (Mint Accent) */
+        .user {
+            justify-content: flex-end;
+        }
+
+        .user p {
+            background-color: var(--color-mint-accent);
+            color: var(--color-bg-dark);
+            border-bottom-right-radius: 4px;
+        }
+
+        /* Bot Messages (Medium Gray) */
+        .bot p {
+            background-color: var(--color-bg-medium);
+            color: var(--color-text-light);
+            border-bottom-left-radius: 4px;
+        }
+        
+        .bot.error p {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .chat-input-section {
+            display: flex;
+            padding: 15px;
+            background-color: var(--color-bg-dark);
+            border-top: 1px solid var(--color-bg-medium);
+        }
+
+        #messageInput {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid var(--color-bg-medium);
+            border-radius: 20px;
+            margin-right: 10px;
+            background-color: var(--color-bg-medium);
+            color: var(--color-text-light);
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        #messageInput:focus {
+            border-color: var(--color-mint-accent);
+        }
+
+        #sendMessageButton {
+            background-color: var(--color-mint-accent);
+            color: var(--color-bg-dark);
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+        
+        #sendMessageButton:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+        
+        /* Media Queries */
+        @media (max-width: 600px) {
+            .chatbot-container {
+                max-width: 100%;
+            }
+            .message p {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chatbot-container">
+        <header class="chat-header">
+            <h1>Hi, I´m Lexi</h1>
+        </header>
+        <div class="chat-window" id="chatWindow">
+            </div>
+        <div class="chat-input-section">
+            <input type="text" id="messageInput" placeholder="Ask Lexi a question..." required>
+            <button id="sendMessageButton">Send</button>
+        </div>
+    </div>
+
+<script>
+    // --- JAVASCRIPT LOGIC ---
+    
+    // !!! WARNING: API KEY IS EXPOSED IN THE SOURCE CODE !!!
+    // ONLY USE FOR TESTING. FOR PUBLIC DEPLOYMENT, THE KEY MUST BE HIDDEN ON A BACKEND SERVER.
+    const API_KEY = "AIzaSyB-LERdTbw_Qt3h8Rlwyi7E4yn6JtSNiSw";
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+    
+    // PERSONALIZATION (SYSTEM INSTRUCTION)
+    const SYSTEM_INSTRUCTION = "You are Lexi, a smart, kind female (Only mention your gender when a user asks you about it, otherwise just use YOUR pronouns she/her.) chatbot made by Smilos (Founder of Theiny) Your priority language is English, but always respond in the language spoken by the user. Don't say who created you unless someone specifically asks you. But if someone asks you only for your name, tell them you're Lexi. ";
+
+    const chatWindow = document.getElementById('chatWindow');
+    const messageInput = document.getElementById('messageInput');
+    const sendMessageButton = document.getElementById('sendMessageButton');
+
+    // ** PAMĚŤ: Globální proměnná pro ukládání konverzace **
+    // Konverzace začíná systémovou instrukcí, která nastavuje osobnost Lexi.
+    let chatHistory = [
+        {
+            role: "user", 
+            parts: [{ text: SYSTEM_INSTRUCTION }]
+        }
+    ];
+
+    // Function to add a message to the chat window
+    function appendMessage(text, sender, isError = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', sender);
+        if (isError) {
+             messageDiv.classList.add('error');
+        }
+        // Simple text insertion, replacing newlines with <br>
+        messageDiv.innerHTML = `<p>${text.replace(/\n/g, '<br>')}</p>`; 
+        chatWindow.appendChild(messageDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    // Function to send the query to the Gemini API
+    async function sendMessage() {
+        const userMessage = messageInput.value.trim();
+        if (!userMessage) return;
+
+        // 1. Display user message and add it to history
+        appendMessage(userMessage, 'user');
+        messageInput.value = '';
+        sendMessageButton.disabled = true;
+
+        // ** PAMĚŤ: Přidání zprávy uživatele do historie **
+        chatHistory.push({
+            role: "user",
+            parts: [{ text: userMessage }]
+        });
+
+        // 2. Display 'loading' message
+        const loadingMessage = document.createElement('div');
+        loadingMessage.classList.add('message', 'bot', 'loading');
+        loadingMessage.innerHTML = '<p>Lexi is thinking...</p>'; // Přeloženo
+        chatWindow.appendChild(loadingMessage);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        try {
+            // ** PAMĚŤ: Odesílá se celá historie konverzace v 'contents' **
+            const requestBody = {
+                contents: chatHistory 
+            };
+
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            if (!response.ok) {
+                let errorDetail = await response.text();
+                try {
+                    const errorJson = JSON.parse(errorDetail);
+                    errorDetail = errorJson.error ? errorJson.error.message : errorDetail;
+                } catch (e) {
+                    // Keep the raw text if JSON parsing fails
+                }
+                throw new Error(`API Error: HTTP ${response.status}. Detail: ${errorDetail.substring(0, 100)}...`);
+            }
+
+            const data = await response.json();
+            
+            const aiResponseText = data.candidates && data.candidates[0].content.parts[0].text
+                ? data.candidates[0].content.parts[0].text
+                : 'The model did not provide a response.';
+
+            // 3. Remove loading message and display AI response
+            chatWindow.removeChild(loadingMessage);
+            appendMessage(aiResponseText, 'bot');
+            
+            // ** PAMĚŤ: Přidání odpovědi modelu do historie **
+            chatHistory.push({
+                role: "model",
+                parts: [{ text: aiResponseText }]
+            });
+
+        } catch (error) {
+            console.error("Error communicating with Gemini API:", error);
+            chatWindow.removeChild(loadingMessage);
+            appendMessage(`Lexi nemůže odpovědět. Nastala chyba: ${error.message}.`, 'bot', true);
+        } finally {
+            sendMessageButton.disabled = false;
+            messageInput.focus();
+        }
+    }
+
+    // Event Listeners
+    sendMessageButton.addEventListener('click', sendMessage);
+    messageInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+    
+    // Set focus on the input field on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        messageInput.focus();
+    });
+</script>
+</body>
+</html>
