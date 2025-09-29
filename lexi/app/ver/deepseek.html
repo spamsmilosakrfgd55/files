@@ -144,7 +144,7 @@
 
     // !!! POZOR: POUŽIJTE ZDE SVŮJ OPENROUTER API KLÍČ !!!
     // Z bezpečnostních důvodů by klíč NIKDY neměl být na veřejném frontendovém kódu.
-    const API_KEY = "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"; 
+    const API_KEY = "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"; 
     
     // OpenRouter API URL pro chat completions (kompatibilní s OpenAI)
     const API_URL = "https://openrouter.ai/api/v1/chat/completions";
@@ -229,7 +229,7 @@
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${API_KEY}`, // Authorization s Bearer tokenem
                     // Doporučené hlavičky pro OpenRouter
-                    'HTTP-Referer': 'https://lexiai-app-url.com', // Změňte na URL vaší aplikace
+                    'HTTP-Referer': 'https://smilos.is-a.dev', // Změňte na URL vaší aplikace
                     'X-Title': 'LexiAI Chatbot' 
                 },
                 body: JSON.stringify(requestBody)
