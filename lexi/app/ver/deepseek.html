@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat - LexiAI (OpenRouter)</title>
+    <title>frame</title>
     <style>
         /* --- CSS STYLES (Dark Theme with Brighter Mint) --- */
         :root {
@@ -200,7 +200,7 @@
         // 2. Zobrazení 'loading' zprávy
         const loadingMessage = document.createElement('div');
         loadingMessage.classList.add('message', 'bot', 'loading');
-        loadingMessage.innerHTML = '<p>Lexi přemýšlí...</p>'; // Změna textu na češtinu
+        loadingMessage.innerHTML = '<p>Lexi is thinking...</p>'; // Změna textu na češtinu
         chatWindow.appendChild(loadingMessage);
         chatWindow.scrollTop = chatWindow.scrollHeight;
 
@@ -251,7 +251,7 @@
             // Získání textu odpovědi z OpenAI-kompatibilního formátu
             const aiResponseText = data.choices && data.choices[0].message.content
                 ? data.choices[0].message.content
-                : 'Model neposkytl odpověď. Zkontrolujte API klíč, URL nebo model ID.';
+                : 'error';
 
             // 3. Odstranění loading zprávy a zobrazení AI odpovědi
             chatWindow.removeChild(loadingMessage);
@@ -268,7 +268,7 @@
             if (chatWindow.contains(loadingMessage)) {
                 chatWindow.removeChild(loadingMessage);
             }
-            appendMessage(`Lexi nemůže odpovědět. Nastala chyba: ${error.message}.`, 'bot', true);
+            appendMessage(`error: ${error.message}.`, 'bot', true);
             
             // ** PAMĚŤ: Odstranění poslední zprávy uživatele, aby nedošlo k duplikování a odeslání při příští API chybě **
             // Toto je oprava chování: pokud se API volání nepodaří, nechceme neúspěšnou zprávu odeslat znovu
