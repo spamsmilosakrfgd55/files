@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji RNG</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            padding: 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+        }
+        #animation {
+            font-size: 80px;
+            margin: 20px 0;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            color: green;
+        }
+        #chance {
+            font-size: 16px;
+            color: darkorange;
+            margin-top: 10px;
+        }
+        button {
+            width: 100px;  /* Čtvercový tvar */
+            height: 100px; /* Čtvercový tvar */
+            font-size: 30px; /* Velké emoji */
+            cursor: pointer;
+            margin: 10px;
+        }
+        #inventory {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            z-index: 1000;
+            width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .inventory-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+        }
+        #close-inventory {
+            cursor: pointer;
+            float: right;
+            font-size: 20px;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="animation"></div>
+    <div id="result"></div>
+    <div id="chance"></div>
+    <div>
+        <button onclick="rollDice()">🎲</button>
+        <button onclick="toggleInventory()">📦</button>
+        <button onclick="clearProgress()">❌</button>
+    </div>
+    <div id="inventory">
+        <span id="close-inventory" onclick="toggleInventory()">✖</span>
+        <strong>Inventory:</strong>
+        <div id="inventory-items"></div>
+    </div>
+    <script>
+        const items = [
+            { emoji: '🍎', chance: 20 }, { emoji: '🍌', chance: 15 }, { emoji: '🍇', chance: 10 },
+            { emoji: '🍉', chance: 8 }, { emoji: '🍊', chance: 7 }, { emoji: '🍋', chance: 6 },
+            { emoji: '🍍', chance: 5 }, { emoji: '🍓', chance: 4 }, { emoji: '🥭', chance: 3 },
+            { emoji: '🍒', chance: 2 }, { emoji: '🎈', chance: 1 }, { emoji: '🎁', chance: 1 },
+            { emoji: '🎊', chance: 1 }, { emoji: '🎂', chance: 1 }, { emoji: '🍰', chance: 1 },
+            { emoji: '🌈', chance: 0.5 }, { emoji: '🚀', chance: 0.5 }, { emoji: '🏆', chance: 0.5 },
+            { emoji: '🎨', chance: 0.5 }, { emoji: '🎵', chance: 0.5 }, { emoji: '📱', chance: 0.5 },
+            { emoji: '💻', chance: 0.5 }, { emoji: '🎮', chance: 0.5 }, { emoji: '📓', chance: 0.5 },
+            { emoji: '🎉', chance: 0.2 }, { emoji: '👑', chance: 0.2 }, { emoji: '🔑', chance: 0.2 },
+            { emoji: '🪙', chance: 0.1 }, { emoji: '🔮', chance: 0.1 }, { emoji: '🎩', chance: 0.1 },
+            { emoji: '🕶️', chance: 0.05 }, { emoji: '🎻', chance: 0.05 }, { emoji: '🎺', chance: 0.05 },
+            { emoji: '🪕', chance: 0.05 }, { emoji: '🎷', chance: 0.05 }, { emoji: '📖', chance: 0.05 },
+            { emoji: '🎤', chance: 0.05 }, { emoji: '🔔', chance: 0.05 }, { emoji: '🎼', chance: 0.05 },
+            { emoji: '🪘', chance: 0.01 }, { emoji: '📅', chance: 0.01 }, { emoji: '🔔', chance: 0.01 },
+            { emoji: '💎', chance: 0.001 }, { emoji: '💰', chance: 0.001 }, { emoji: '🌍', chance: 0.001 },
+            { emoji: '⭐', chance: 0.0001 }, { emoji: '✨', chance: 0.0001 }, { emoji: '🌟', chance: 0.0001 },
+            { emoji: '⚡', chance: 0.0001 }, { emoji: '🪐', chance: 0.00001 }, { emoji: '🌌', chance: 0.00001 },
+            { emoji: '🏅', chance: 0.00001 }, { emoji: '🥇', chance: 0.000001 }, { emoji: '🥈', chance: 0.000001 },
+            { emoji: '🥉', chance: 0.000001 }, { emoji: '🗡️', chance: 0.000001 }, { emoji: '🛡️', chance: 0.000001 },
+            { emoji: '🍀', chance: 18 }, { emoji: '🎃', chance: 12 }, { emoji: '🍄', chance: 9 },
+            { emoji: '🌻', chance: 7 }, { emoji: '💐', chance: 5 }, { emoji: '🌼', chance: 4 },
+            { emoji: '🌸', chance: 3 }, { emoji: '🌈', chance: 2 }, { emoji: '🍹', chance: 2 },
+            { emoji: '🥝', chance: 1.5 }, { emoji: '🥥', chance: 1.5 }, { emoji: '🌰', chance: 1.5 },
+            { emoji: '🍯', chance: 1.5 }, { emoji: '🥑', chance: 1.5 }, { emoji: '🧁', chance: 1.5 },
+            { emoji: '🍪', chance: 1.5 }, { emoji: '🥞', chance: 1 }, { emoji: '🍜', chance: 1 },
+            { emoji: '🍣', chance: 1 }, { emoji: '🌮', chance: 1 }, { emoji: '🍕', chance: 1 },
+            { emoji: '🌭', chance: 1 }, { emoji: '🍔', chance: 1 },
+            { emoji: '🌊', chance: 0.2 }, { emoji: '🏝️', chance: 0.1 }, { emoji: '🚢', chance: 0.1 },
+            { emoji: '⛵', chance: 0.05 }, { emoji: '🐬', chance: 0.05 }, { emoji: '🐠', chance: 0.05 },
+            { emoji: '🐳', chance: 0.05 }, { emoji: '🐢', chance: 0.05 }, { emoji: '🦈', chance: 0.01 },
+            { emoji: '🦩', chance: 0.01 }, { emoji: '🐦', chance: 0.01 }, { emoji: '🦜', chance: 0.01 },
+            { emoji: '🐺', chance: 0.01 }, { emoji: '🦊', chance: 0.001 }, { emoji: '🐉', chance: 0.001 },
+            { emoji: '🦕', chance: 0.0001 }, { emoji: '🦖', chance: 0.0001 }, { emoji: '🐲', chance: 0.0001 },
+            { emoji: '🐾', chance: 0.0001 }, { emoji: '🦁', chance: 0.00001 }, { emoji: '🐅', chance: 0.00001 },
+            { emoji: '🐆', chance: 0.00001 }, { emoji: '🐋', chance: 0.00001 }, { emoji: '🐪', chance: 0.00001 },
+            { emoji: '🐫', chance: 0.00001 }, { emoji: '🦓', chance: 0.00001 }, { emoji: '🦒', chance: 0.00001 },
+            { emoji: '🦓', chance: 0.00001 }, { emoji: '🦊', chance: 0.00001 }, { emoji: '🐘', chance: 0.00001 },
+            { emoji: '🦏', chance: 0.00001 }, { emoji: '🐋', chance: 0.00001 }, { emoji: '🐋', chance: 0.00001 },
+            // Přidejte více unikátních emoji s různými šancemi
+        ];
+        let inventory = loadInventory();
+
+        function rollDice() {
+            const animation = document.getElementById('animation');
+            const result = document.getElementById('result');
+            const chanceDisplay = document.getElementById('chance');
+            animation.innerHTML = '';
+            result.innerHTML = '';
+            chanceDisplay.innerHTML = '';
+
+            // Animace přeblikávání emoji
+            const duration = 3000; // 3 sekundy
+            const interval = 100; // jak často se mění emoji
+            const totalSteps = duration / interval;
+            let currentStep = 0;
+
+            const intervalId = setInterval(() => {
+                const randomEmoji = items[Math.floor(Math.random() * items.length)].emoji;
+                animation.innerHTML = randomEmoji;
+                currentStep++;
+
+                if (currentStep >= totalSteps) {
+                    clearInterval(intervalId);
+                    const selectedItem = selectItem();
+                    animation.innerHTML = selectedItem.emoji;
+                    result.innerHTML = `You got: ${selectedItem.emoji}`;
+                    chanceDisplay.innerHTML = `Chance: ${selectedItem.chance}%`;
+                    addToInventory(selectedItem);
+                    saveInventory();
+                }
+            }, interval);
+        }
+
+        function selectItem() {
+            const randomNumber = Math.random() * 100;
+            let cumulativeChance = 0;
+            for (const item of items) {
+                cumulativeChance += item.chance;
+                if (randomNumber <= cumulativeChance) {
+                    return item;
+                }
+            }
+        }
+
+        function addToInventory(item) {
+            const existingItem = inventory.find(i => i.emoji === item.emoji);
+            if (existingItem) {
+                existingItem.count++;
+            } else {
+                inventory.push({ emoji: item.emoji, count: 1, chance: item.chance });
+            }
+        }
+
+        /**
+         * Uloží inventář do cookies s nastavením SameSite=None; Secure
+         * pro funkčnost v rámci iframu (cookies třetích stran).
+         * POZNÁMKA: 'Secure' vyžaduje HTTPS.
+         */
+        function saveInventory() {
+            // Nastaví cookie s atributy pro cookies třetích stran
+            document.cookie = "inventory=" + JSON.stringify(inventory) + "; path=/; SameSite=None; Secure";
+        }
+
+        function loadInventory() {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; inventory=`);
+            if (parts.length === 2) {
+                return JSON.parse(parts.pop().split(';')[0]);
+            }
+            return [];
+        }
+
+        function clearProgress() {
+            if (confirm("Do you want to clear your progress?")) {
+                inventory = [];
+                saveInventory();
+                alert("Progress has been successfully deleted!");
+            }
+        }
+
+        function toggleInventory() {
+            const inventoryDiv = document.getElementById('inventory');
+            const inventoryItemsDiv = document.getElementById('inventory-items');
+            inventoryItemsDiv.innerHTML = '';
+            inventory.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'inventory-item';
+                // Zaokrouhlení šance na 5 desetinných míst pro přehlednost
+                const chance = (item.chance % 1 !== 0) ? item.chance.toFixed(5).replace(/\.?0+$/, "") : item.chance;
+                itemDiv.innerHTML = `<span>${item.emoji} | ${item.count}x | ${chance}%</span>`;
+                inventoryItemsDiv.appendChild(itemDiv);
+            });
+            inventoryDiv.style.display = inventoryDiv.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>
