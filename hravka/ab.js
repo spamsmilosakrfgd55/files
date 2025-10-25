@@ -1,4 +1,4 @@
-<script>
+
     // Vše se spustí až po plném načtení HTML struktury (DOM), což řeší problém s "body".
     document.addEventListener('DOMContentLoaded', function() {
         
@@ -91,4 +91,4 @@
         })();
         // --- KONEC KÓDU ---
     }); 
-</script>
+
