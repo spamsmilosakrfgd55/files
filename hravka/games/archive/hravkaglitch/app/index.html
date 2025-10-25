@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hravka - Free Games for Everyone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        header {
+            background-color: #ff6600;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 28px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 10px;
+        }
+
+        .search-bar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .game-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: flex-start;
+        }
+
+        .game-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 150px;
+            height: 180px;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .game-button img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+        }
+
+        .game-button:hover {
+            background-color: #ffebcc;
+            border-color: #ff6600;
+            transform: scale(1.05);
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .ad {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 20px;
+        }
+
+        footer p {
+            font-size: 14px;
+        }
+    </style>
+    <script>
+        function searchGames() {
+            const query = document.getElementById("search").value.toLowerCase();
+            const games = document.querySelectorAll(".game-button");
+            games.forEach(game => {
+                const title = game.querySelector("span").innerText.toLowerCase();
+                game.style.display = title.includes(query) ? "flex" : "none";
+            });
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Hravka</h1>
+    </header>
+
+    <div class="container">
+        <div class="ad">
+            <iframe data-aa='2371981' src='//ad.a-ads.com/2371981?size=728x90' style='width:728px; height:90px; border:0px; padding:0; overflow:hidden; background-color: transparent;'></iframe>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Search games..." oninput="searchGames()">
+        </div>
+
+        <h2>Games</h2><br>
+        <div class="game-grid">
+            <a href="https://hravka.glitch.me/game/bloonstd4.html" class="game-button">
+                <img src="https://learningworksforkids.com/wp-content/uploads/Bloons-Tower-Defense-4-Icon.png" alt="icon">
+                <span>Bloons TD 4</span>
+            </a>
+            <a href="https://hravka.glitch.me/game/fitelol.html" class="game-button">
+                <img src="https://www.addictinggames.com/_next/image?url=https%3A%2F%2Fprod.addictinggames.com%2Fsites%2Fdefault%2Ffiles%2Ffitelol_promo_720_468%2520%25281%2529.png&w=1920&q=100" alt="Game 3 Icon">
+                <span>Fite.lol</span>
+            </a>
+            <a href="https://hravka.glitch.me/game/gtasimulator.html" class="game-button">
+                <img src="https://www.onlinegames.io/media/posts/416/responsive/GTA-Simulator-lg.jpg" alt="Game 4 Icon">
+                <span>GTA Simulator</span>
+            </a>
+            <a href="https://hravka.glitch.me/game/keyquest.html" class="game-button">
+                <img src="https://www.jopi.com/cdn-cgi/image/quality=70,width=256,height=256,f=auto/img/t/key-quest.png" alt="Game 5 Icon">
+                <span>Key Quest</span>
+            </a>
+            <a href="https://hravka.glitch.me/game/geometrydash.html" class="game-button">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4K5nTI4sWAOKdvgpDTo_Dmtcsf8EV3ye4xg&s" alt="Game 5 Icon">
+                <span>Geometry Dash</span>
+            </a>
+            <a href="https://hravka.glitch.me/game/neonbricks.html" class="game-button">
+                <img src="https://www.jopi.com/cdn-cgi/image/quality=70,width=256,height=256,f=auto/img/t/neon-bricks.png" alt="Game 5 Icon">
+                <span>Neon Bricks</span>
+            </a>
+            <a href="https://hravka.glitch.me/game/waytohome.html" class="game-button">
+                <img src="https://www.jopi.com/cdn-cgi/image/quality=70,width=256,height=256,f=auto/img/t/way-to-home.png" alt="Game 5 Icon">
+                <span>Way To Home</span>
+            </a>
+            <a href="https://hravka.glitch.me/game/bloxdio.html" class="game-button">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6DQO3iUKTOd2pqn0NwYMxi0AFS8y51ljONg&s" alt="Game 5 Icon">
+                <span>Bloxd.io</span>
+            </a>
+            <a href="https://hravka.glitch.me/game/craftniteio.html" class="game-button">
+                <img src="https://cdn-1.webcatalog.io/catalog/craftnite-io/craftnite-io-icon-filled-256.png?v=1714779938123" alt="Game 5 Icon">
+                <span>Craftnite.io</span>
+            </a>
+            <a href="https://hravka.glitch.me/game/tombofthemask.html" class="game-button">
+                <img src="https://play-lh.googleusercontent.com/ATGr-U4JBK2VjFzKGK9eMMkrDxJaazadOUoz_7Yl0U5NrWSFcFUzEtNurWXYzVWc8uOO" alt="Game 5 Icon">
+                <span>Tomb of the Mask</span>
+            </a>
+            <a href="https://hravka.glitch.me/game/subwaysurfers.html" class="game-button">
+                <img src="https://cdnb.artstation.com/p/assets/images/images/040/799/969/large/celine-j-icon-1024-ios.jpg?1629908125" alt="Game 5 Icon">
+                <span>Subway Surfers</span>
+            </a>
+            <a href="https://hravka.glitch.me/game/squarebird.html" class="game-button">
+                <img src="https://play-lh.googleusercontent.com/SSHfkzIYw4uBMCxuVJy3uR1ve1M_8mKRTwWNhD-UFb5vrAg9IO54hCk4boGYvv363MrW" alt="icon">
+                <span>Square Bird</span>
+            </a>
+            <a href="https://hravka.glitch.me/game/mineclone.html" class="game-button">
+                <img src="https://www5.minijuegosgratis.com/v3/games/thumbnails/24899_1.jpg" alt="icon">
+                <span>Mine Clone</span>
+            </a>
+
+
+        </div>
+
+        <div class="ad">
+            <iframe data-aa='2371981' src='//ad.a-ads.com/2371981?size=728x90' style='width:728px; height:90px; border:0px; padding:0; overflow:hidden; background-color: transparent;'></iframe>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 Hravka. All rights reserved.</p>
+    </footer>
+</body>
+</html>

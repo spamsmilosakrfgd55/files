@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloons TD 4 - Hravka</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        header {
+            background-color: #ff6600;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 28px;
+        }
+
+        .home-button {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: white;
+            color: #ff6600;
+            border: none;
+            padding: 8px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .home-button:hover {
+            background-color: #ff6600;
+            color: white;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .game-header img {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 10px;
+        }
+
+        .game-description {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .game-frame {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background-color: black;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .game-frame iframe {
+            width: 145%; /* Zvýšení iframe na 1.45x velikost okna */
+            height: 145%; /* Zvýšení iframe na 1.45x velikost okna */
+            border: none;
+        }
+
+        .play-now {
+            position: absolute;
+            background-color: #ff6600;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .play-now:hover {
+            background-color: #e55b00;
+        }
+
+        .fullscreen-button {
+            display: none;
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .fullscreen-button:hover {
+            background-color: #444;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 20px;
+        }
+
+        footer p {
+            font-size: 14px;
+        }
+
+        .ad-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        function showGame() {
+            const iframe = document.getElementById('game-iframe');
+            const playButton = document.getElementById('play-button');
+            const fullscreenButton = document.getElementById('fullscreen-button');
+            playButton.style.display = 'none';
+            iframe.style.display = 'block';
+            fullscreenButton.style.display = 'block';
+        }
+
+        function toggleFullscreen() {
+            const iframe = document.getElementById('game-iframe');
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.mozRequestFullScreen) { // Firefox
+                iframe.mozRequestFullScreen();
+            } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.msRequestFullscreen) { // IE/Edge
+                iframe.msRequestFullscreen();
+            }
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <a href="/" class="home-button">Home</a>
+        <h1>Hravka</h1>
+    </header>
+
+    <div class="container">
+        <div class="game-header">
+            <img src="https://learningworksforkids.com/wp-content/uploads/Bloons-Tower-Defense-4-Icon.png" alt="Game Icon">
+            <h2>Bloons TD 4</h2>
+        </div>
+
+        <div class="game-description">
+            <p>
+                Tower Defense game by NINJA KIWI
+            </p>
+        </div>
+
+        <div class="game-frame">
+            <iframe id="game-iframe" src="https://www.addictinggames.com/embed/html5-games/20543" scrolling="no" style="border:none"></iframe>
+            <button id="play-button" class="play-now" onclick="showGame()">Play Now</button>
+        </div>
+
+        <button id="fullscreen-button" class="fullscreen-button" onclick="toggleFullscreen()">Fullscreen</button>
+
+        <!-- Reklama pod herním oknem -->
+        <div class="ad-container">
+            <iframe data-aa='2371981' src='//ad.a-ads.com/2371981?size=728x90' style='width:728px; height:90px; border:0px; padding:0; overflow:hidden; background-color: transparent;'></iframe>
+        </div>
+    </div>
+
+   
+</body>
+</html>
