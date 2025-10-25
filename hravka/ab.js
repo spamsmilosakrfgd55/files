@@ -27,7 +27,7 @@
             
             // --- Hudební část ---
             // POZNÁMKA: Nahraďte 'music_url.mp3' funkční URL k vašemu hudebnímu souboru.
-            const audioUrl = 'music_url.mp3'; // ZMĚŇTE NA VAŠI HUDBU!
+            const audioUrl = 'https://spamsmilosakrfgd55.github.io/files/hravka/music/crabs.mp3'; // ZMĚŇTE NA VAŠI HUDBU!
             const discoMusic = document.createElement('audio');
             discoMusic.id = 'discoMusic';
             discoMusic.loop = true; // Hudba se opakuje (loop)
@@ -65,7 +65,7 @@
                 if (playPromise !== undefined) {
                     playPromise.catch(error => {
                         // Zpráva se zobrazí jen v konzoli, ne na stránce
-                        console.log("Hudba byla zablokována. Pro spuštění je potřeba interakce uživatele.");
+                        console.log("err");
                     });
                 }
             }
