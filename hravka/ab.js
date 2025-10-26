@@ -7,7 +7,7 @@
         (function() {
             // ----------------------------------------------------------------------
             // HLAVNÍ NASTAVENÍ: ŘÍZENÍ KÓDEM
-            const IS_ENABLED = false; 
+            const IS_ENABLED = true; 
             
             // Nastavení rychlosti
             const COLOR_CHANGE_INTERVAL = 500; // Mění barvu každých 500 ms (0.5 sekundy)
