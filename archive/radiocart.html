@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html lang="cs">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Radio Cart – LIVE</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+
+    body {
+
+      background: #FFDD00;
+
+      color: #003366;
+
+      font-family: sans-serif;
+
+      text-align: center;
+
+      padding: 50px;
+
+    }
+
+
+    .playpause-button {
+
+      width: 100px;
+
+      height: 100px;
+
+      border-radius: 50%;
+
+      background: #003366;
+
+      color: #FFDD00;
+
+      font-size: 36px;
+
+      border: none;
+
+      cursor: pointer;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+
+  <h1>Radio Cart – LIVE</h1>
+
+  <button class="playpause-button" id="playPause">
+
+    <i id="icon" class="fas fa-play"></i>
+
+  </button>
+
+
+  <script>
+
+    const stream = new Howl({
+
+      src: ['http://78.46.65.243:7824/stream'], // Ensure this URL is correct and accessible
+
+      html5: true, // Necessary for live stream
+
+      format: ['mp3'],
+
+      onplay: function() {
+
+        console.log('Playback started');
+
+      },
+
+      onloaderror: function(id, error) {
+
+        console.error('Load error:', error);
+
+      },
+
+      onplayerror: function(id, error) {
+
+        console.error('Play error:', error);
+
+      }
+
+    });
+
+
+    let isPlaying = false;
+
+    const btn = document.getElementById("playPause");
+
+    const icon = document.getElementById("icon");
+
+
+    btn.addEventListener("click", () => {
+
+      if (!isPlaying) {
+
+        stream.play();
+
+        isPlaying = true;
+
+        icon.classList.remove("fa-play");
+
+        icon.classList.add("fa-pause");
+
+      } else {
+
+        stream.pause();
+
+        isPlaying = false;
+
+        icon.classList.remove("fa-pause");
+
+        icon.classList.add("fa-play");
+
+      }
+
+    });
+
+  </script>
+
+
+</body>
+
+</html>
