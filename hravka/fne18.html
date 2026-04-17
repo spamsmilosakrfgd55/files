@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>18+ Age Check</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #fff;
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 140, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .dialog {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+
+  .dialog h2 {
+    margin-bottom: 25px;
+    color: #ff8c00;
+  }
+
+  .btn {
+    padding: 12px 25px;
+    margin: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .yes {
+    background: #ff8c00;
+    color: white;
+  }
+
+  .no {
+    background: white;
+    color: #ff8c00;
+    border: 2px solid #ff8c00;
+  }
+
+  .btn:hover {
+    opacity: 0.9;
+  }
+</style>
+</head>
+<body>
+
+<div class="overlay" id="ageDialog">
+  <div class="dialog">
+    <h2>Are you 18 or older?</h2>
+    <button class="btn yes" onclick="confirmAge(true)">Yes</button>
+    <button class="btn no" onclick="confirmAge(false)">No</button>
+  </div>
+</div>
+
+<script>
+function confirmAge(isAdult) {
+  if (isAdult) {
+    window.location.href = "https://www.zahraj.cz/embed/five-nights-at-epstein-s/";
+  } else {
+    window.location.href = "https://www.google.com";
+  }
+}
+</script>
+
+</body>
+</html>
