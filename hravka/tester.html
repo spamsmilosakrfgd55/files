@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Game Wrapper</title>
+    <style>
+        /* Základní styly */
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: sans-serif; background: #121212; color: white;
+            overflow: hidden;
+        }
+
+        /* Styl pro úvodní formulář */
+        #setup-screen {
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            height: 100vh; text-align: center;
+        }
+
+        .input-group {
+            background: #1e1e1e; padding: 2rem; border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        input {
+            padding: 12px; width: 300px; border-radius: 5px;
+            border: 1px solid #333; background: #000; color: white; margin-bottom: 10px;
+        }
+
+        button {
+            padding: 12px 25px; cursor: pointer; background: #f39c12;
+            border: none; border-radius: 5px; font-weight: bold; color: black;
+        }
+
+        /* Styl pro hru (iframe) */
+        #game-container {
+            display: none; /* Schované, dokud není URL */
+            width: 100%; height: 100%; position: relative;
+        }
+
+        iframe {
+            width: 100%; height: 100%; border: none;
+            background: black;
+        }
+
+        .back-btn {
+            position: fixed; top: 10px; left: 10px; z-index: 100;
+            background: rgba(255,255,255,0.2); color: white;
+            padding: 5px 10px; border-radius: 5px; text-decoration: none;
+            font-size: 12px; backdrop-filter: blur(5px);
+        }
+        .back-btn:hover { background: rgba(255,255,255,0.5); }
+    </style>
+</head>
+<body>
+
+    <div id="setup-screen">
+        <div class="input-group">
+            <h1>Game Wrapper</h1>
+            <p>Vlož URL hry (třeba z PokéPath)</p>
+            <input type="text" id="gameUrl" placeholder="https://url-hry.com">
+            <br>
+            <button onclick="launchGame()">Spustit hru</button>
+        </div>
+    </div>
+
+    <div id="game-container">
+        <a href="#" onclick="goBack()" class="back-btn">← Zavřít hru</a>
+        <iframe id="gameFrame" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+    </div>
+
+    <script>
+        const setupScreen = document.getElementById('setup-screen');
+        const gameContainer = document.getElementById('game-container');
+        const gameFrame = document.getElementById('gameFrame');
+        const input = document.getElementById('gameUrl');
+
+        // Funkce pro spuštění hry
+        function launchGame(urlFromParam) {
+            const url = urlFromParam || input.value;
+            
+            if (url) {
+                gameFrame.src = url;
+                setupScreen.style.display = 'none';
+                gameContainer.style.display = 'block';
+                
+                // Přidá URL do historie prohlížeče, aby fungovalo tlačítko "Zpět"
+                window.history.pushState({playing: true}, '', `?game=${encodeURIComponent(url)}`);
+            }
+        }
+
+        // Funkce pro návrat k zadávání
+        function goBack() {
+            gameFrame.src = '';
+            setupScreen.style.display = 'flex';
+            gameContainer.style.display = 'none';
+            window.history.pushState({}, '', window.location.pathname);
+        }
+
+        // Automatické načtení, pokud je URL v adrese (např. tvujweb.com/?game=https://...)
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            const gameUrl = params.get('game');
+            if (gameUrl) {
+                launchGame(gameUrl);
+            }
+        };
+
+        // Podpora pro tlačítko "Zpět" v prohlížeči
+        window.onpopstate = () => {
+            const params = new URLSearchParams(window.location.search);
+            if (!params.get('game')) {
+                goBack();
+            }
+        };
+    </script>
+</body>
+</html>
