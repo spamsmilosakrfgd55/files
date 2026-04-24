@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Chromecast Ambient Dynamic</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: black;
+            font-family: sans-serif;
+        }
+        
+        /* Obrázek jako pozadí */
+        #bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            /* Jemný přechod při změně obrázku (pokud to KitKat prohlížeč zvládne) */
+            transition: opacity 1s ease-in-out;
+        }
+
+        /* Spodní stín pro čitelnost */
+        .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: -webkit-linear-gradient(transparent, rgba(0,0,0,0.6));
+            background: linear-gradient(transparent, rgba(0,0,0,0.6));
+            z-index: 2;
+        }
+
+        /* Kontejner pro čas */
+        .info-container {
+            position: absolute;
+            bottom: 8%;
+            left: 5%;
+            color: white;
+            z-index: 3;
+            text-shadow: 2px 2px 15px rgba(0,0,0,0.8);
+        }
+
+        #clock {
+            font-size: 8rem;
+            margin: 0;
+            font-weight: 100;
+            letter-spacing: -2px;
+        }
+
+        #date {
+            font-size: 1.8rem;
+            margin-top: -10px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <img id="bg-image" src="http://picsum.photos/1920/1080" alt="Pozadí">
+    
+    <div class="overlay"></div>
+    
+    <div class="info-container">
+        <div id="clock">00:00</div>
+        <div id="date">Pondělí, 1. ledna</div>
+    </div>
+
+    <script>
+        function updateClock() {
+            var now = new Date();
+            var h = now.getHours().toString();
+            var m = now.getMinutes().toString();
+            if (h.length < 2) h = '0' + h;
+            if (m.length < 2) m = '0' + m;
+            document.getElementById('clock').innerText = h + ":" + m;
+            
+            var dny = ['Neděle', 'Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'];
+            var mesice = ['ledna', 'února', 'března', 'dubna', 'května', 'června', 'července', 'srpna', 'září', 'října', 'listopadu', 'prosince'];
+            
+            document.getElementById('date').innerText = dny[now.getDay()] + ", " + now.getDate() + ". " + mesice[now.getMonth()];
+        }
+
+        function changeImage() {
+            var img = document.getElementById('bg-image');
+            // Přidáme náhodné číslo do URL, aby prohlížeč pokaždé stáhl nový obrázek a nepoužíval ten z mezipaměti
+            var randomId = Math.floor(Math.random() * 1000);
+            img.src = "http://picsum.photos/1920/1080?random=" + randomId;
+        }
+
+        // Hodiny běží každou sekundu
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Obrázek se mění každých 15 sekund
+        setInterval(changeImage, 15000);
+    </script>
+</body>
+</html>
